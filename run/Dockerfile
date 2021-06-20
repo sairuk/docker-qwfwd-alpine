@@ -1,18 +1,11 @@
-FROM debian:stretch-slim
+FROM alpine:3.14
 MAINTAINER sairuk
 ARG SRVUSER=qw
 ARG SRVUID=1004
 ARG INSTDIR=/srv/qwfwd
 
-RUN apt-get -y update \
-&& apt-get -y upgrade
-
-# CLEAN IMAGE
-RUN apt-get -y clean && apt-get -y autoremove
-
-
 # CREATE USER
-RUN useradd -m -s /bin/bash -u ${SRVUID} ${SRVUSER} -d ${INSTDIR}
+RUN adduser -D -s /bin/sh -h ${INSTDIR} -u ${SRVUID} ${SRVUSER} 
 
 # SERVER FILES
 COPY _server/. ${INSTDIR}
