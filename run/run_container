@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+BASEDIR=${1:-$(pwd)}
+CONTAINER=$(basename $BASEDIR)
+SERVERNAME=qwfwd
+
+docker stop $SERVERNAME
+docker rm $SERVERNAME
+
+# launch new
+docker run -d \
+--publish 30000:30000/udp \
+--publish 27000:27000/tcp \
+--publish 27000:27000/udp \
+--stop-timeout 30 \
+--name $SERVERNAME \
+$CONTAINER:latest
+
+docker logs --follow $SERVERNAME

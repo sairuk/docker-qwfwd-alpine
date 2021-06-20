@@ -1,0 +1,52 @@
+#!/bin/sh
+
+REPODIR=qwfwd
+#GITREPO="https://github.com/deurk/qwfwd.git ${REPODIR}"
+GITREPO="https://github.com/sairuk/qwfwd.git ${REPODIR}"
+VERSION=${1:-b2b24baea09c04a75874f3dd82ec91eca49b5d28}
+TARGET=linux-amd64
+BOTS=1
+
+###
+# 
+# OVERRIDE
+#
+[ -e ${HOME}/build-script ] && ${HOME}/build-script
+
+###
+#
+# GIT ACTIONS
+#
+cd $HOME
+
+if [ ! -d ${HOME}/${REPODIR}/.git ]; then
+    git clone --recurse-submodules $GITREPO
+fi
+
+cd ${HOME}/${REPODIR}
+#git pull
+
+###
+#
+# CHECKOUT
+#
+git checkout $VERSION
+
+###
+#
+# CLEAN
+#
+rm -rf build_${TARGET}
+
+###
+#
+# COMPILE
+#
+./configure
+make clean
+make CFLAGS="-Xlinker -zmuldefs"
+
+###
+#
+# INSTALL
+#
